@@ -2,6 +2,8 @@ Reverse Geocoding atau Geocoding Terbalik adalah proses mengubah lokasi yang dig
 
 Penggunaan OpenCage Geocoding API untuk mendapatkan alamat dari peta leaflet dengan menggunakan php native
 
+UNTUK MENDAPATKAN APIKEY SILAHKAN LOGIN UNTUK MENDAPATKAN GEOCODING API, DAPAT DI AKSES PADA HALAMAN >> https://opencagedata.com/dashboard#geocoding
+
 Dokumentasi OpenCage Geocoding API >> https://opencagedata.com/
 
 Dokumentasi LeafletJS >> https://leafletjs.com/reference.html
