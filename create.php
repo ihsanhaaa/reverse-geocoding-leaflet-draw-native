@@ -32,7 +32,7 @@ if (isset(($_POST["submit"]))) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Leaflet Draw with PHP and Form</title>
+  <title>Reverse Geocoding Leaflet Draw with PHP and Form</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css" />
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -53,6 +53,8 @@ if (isset(($_POST["submit"]))) {
     }
 
     #deskripsi,
+    #alamat,
+    #kode_pos,
     #geojson {
       width: 100%;
       box-sizing: border-box;
@@ -76,9 +78,25 @@ if (isset(($_POST["submit"]))) {
     </div>
 
     <div>
+      <label for="alamat">Alamat: (otomatis)</label><br>
+      <textarea id="alamat" name="alamat" rows="4" cols="50"></textarea>
+    </div>
+
+    <div>
+      <label for="kode_pos">Kode Pos: (otomatis)</label><br>
+      <textarea id="kode_pos" name="kode_pos" rows="4" cols="50"></textarea>
+    </div>
+
+    <div>
       <button type="submit" name="submit" style="margin-top: 40px;">Simpan Data</button>
     </div>
   </form>
+
+  <!-- tambahkan cdn turf.js untuk dapat menjalankan algoritma perhitungan titik tengah poligon -->
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@latest"></script>
+
+  <!-- jquery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <script>
     var map = L.map("map").setView([-0.05509435153361005, 109.34942867782628], 15);
@@ -129,6 +147,8 @@ if (isset(($_POST["submit"]))) {
         onEachFeature: function(feature, layer) {
           const popupContent = '<b>Popup Content</b><br>' +
             'Deskripsi: ' + mapData.deskripsi +
+            '<br>Alamat: ' + mapData.alamat +
+            '<br>Kode Pos: ' + mapData.kode_pos +
             '<br><a href="edit.php?id=' + mapData.id + '">Edit</a>' +
             '<br><a href="hapus.php?id=' + mapData.id + '">Hapus</a>';
           layer.bindPopup(popupContent);
@@ -155,6 +175,25 @@ if (isset(($_POST["submit"]))) {
       feature.type = feature.type || "Feature";
       var props = (feature.properties = feature.properties || {});
       drawnItems.addLayer(layer);
+
+      // Dapatkan koordinat centroid polygon
+      var centroid = turf.centroid(layer.toGeoJSON());
+      var latitude = centroid.geometry.coordinates[1];
+      var longitude = centroid.geometry.coordinates[0];
+
+      // Gunakan OpenCage Geocoding API untuk mendapatkan informasi lokasi
+      // sebaiknya pada bagian apiKey di simpan dalam env supaya lebih aman
+      var apiKey = 'c27f372189e942e0a16ae5dccb593257';
+      var geocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apiKey}&language=id`;
+
+      console.log(geocodingUrl);
+      $.get(geocodingUrl, function(data) {
+        var kode_pos = data.results[0].components.postcode || 'Tidak diketahui';
+        var jalan = data.results[0].components.road || 'Tidak diketahui';
+
+        document.getElementById("alamat").value = jalan;
+        document.getElementById("kode_pos").value = kode_pos;
+      });
 
       var geojson = JSON.stringify(event.layer.toGeoJSON());
       document.getElementById("geojson").value = geojson;

@@ -1,6 +1,6 @@
 <?php 
 // Koneksi ke database
-$conn = mysqli_connect("localhost", "root", "", "leaflet-draw-native");
+$conn = mysqli_connect("localhost", "root", "", "reverse-geocoding-leaflet-draw-native");
 
 function query($query) {
 	global $conn;
@@ -17,11 +17,13 @@ function tambah($data) {
 	// ambil data dari tiap elemen
 	$deskripsi = htmlspecialchars($data["deskripsi"]);
 	$geojson = $data["geojson"];
+	$alamat = $data["alamat"];
+	$kode_pos = $data["kode_pos"];
 
 	// query insert data
 	$query = "INSERT INTO maps 
 				VALUES
-				('', '$deskripsi', '$geojson')
+				('', '$deskripsi', '$geojson', '$alamat', '$kode_pos')
 			";
 	mysqli_query($conn, $query);
 
@@ -44,11 +46,15 @@ function ubah($data) {
 	$id = $data["id"];
 	$deskripsi = htmlspecialchars($data["deskripsi"]);
 	$geojson = $data["geojson"];
+	$alamat = $data["alamat"];
+	$kode_pos = $data["kode_pos"];
 
 	// query insert data
 	$query = "UPDATE maps SET
 				deskripsi = '$deskripsi',
-				geojson = '$geojson'
+				geojson = '$geojson',
+				alamat = '$alamat',
+				kode_pos = '$kode_pos'
 				WHERE id = $id
 			";
 	mysqli_query($conn, $query);
