@@ -6,4 +6,6 @@ Dokumentasi OpenCage Geocoding API >> https://opencagedata.com/
 
 Dokumentasi LeafletJS >> https://leafletjs.com/reference.html
 
-Note: Masih terdapat bug pada fitur edit
+Note: masih terdapat bug pada fitur edit
+
+</> code by ihsan Haryansyah
