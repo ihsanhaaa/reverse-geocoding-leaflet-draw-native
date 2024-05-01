@@ -183,7 +183,7 @@ if (isset(($_POST["submit"]))) {
 
       // Gunakan OpenCage Geocoding API untuk mendapatkan informasi lokasi
       // sebaiknya pada bagian apiKey di simpan dalam env supaya lebih aman
-      var apiKey = 'c27f372189e942e0a16ae5dccb593257';
+      var apiKey = 'XXXX';
       var geocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apiKey}&language=id`;
 
       console.log(geocodingUrl);
